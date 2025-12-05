@@ -1,0 +1,33 @@
+.sealthebox-game {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 100px);
+  padding: 20px;
+}
+
+.coming-soon {
+  text-align: center;
+  color: white;
+}
+
+.coming-soon h2 {
+  font-size: 3em;
+  margin-bottom: 20px;
+}
+
+.coming-soon p {
+  font-size: 1.5em;
+}
+
+@media (max-width: 1400px) {
+  .sealthebox-game {
+    min-height: calc(100vh - 80px);
+  }
+}
+
+@media (max-width: 800px) {
+  .sealthebox-game {
+    min-height: calc(100vh - 60px);
+  }
+}

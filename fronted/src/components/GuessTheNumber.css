@@ -1,0 +1,138 @@
+.guess-game {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 100px);
+  padding: 20px;
+}
+
+.difficulty-select {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.difficulty-select h2 {
+  color: white;
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.difficulty-btn {
+  background-color: #444;
+  color: white;
+  padding: 15px 40px;
+  font-size: 1.2em;
+  border: 1px solid #fff;
+  cursor: pointer;
+  min-width: 200px;
+}
+
+.difficulty-btn:hover {
+  background-color: #555;
+}
+
+.game-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  max-width: 600px;
+  text-align: center;
+}
+
+.game-message {
+  font-size: 1.5em;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.guess-input {
+  padding: 10px;
+  font-size: 1.2em;
+  width: 200px;
+  text-align: center;
+}
+
+.submit-btn {
+  background-color: #444;
+  color: white;
+  padding: 10px 30px;
+  font-size: 1.1em;
+  border: 1px solid #fff;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #555;
+}
+
+.timer {
+  font-size: 1.3em;
+  color: white;
+  margin-top: 10px;
+}
+
+.error-message {
+  color: #f00;
+  font-size: 1.1em;
+}
+
+.hint-message {
+  color: #404040;
+  font-size: 1.1em;
+}
+
+.game-result {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  text-align: center;
+}
+
+.win-message {
+  color: #0f0;
+  font-size: 2.5em;
+}
+
+.lose-message {
+  color: #f00;
+  font-size: 2.5em;
+}
+
+.game-result p {
+  font-size: 1.3em;
+  color: white;
+}
+
+.play-again-btn {
+  background-color: #444;
+  color: white;
+  padding: 15px 40px;
+  font-size: 1.2em;
+  border: 1px solid #fff;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.play-again-btn:hover {
+  background-color: #555;
+}
+
+@media (max-width: 1400px) {
+  .guess-game {
+    min-height: calc(100vh - 80px);
+  }
+}
+
+@media (max-width: 800px) {
+  .guess-game {
+    min-height: calc(100vh - 60px);
+  }
+  
+  .game-message {
+    font-size: 1.2em;
+  }
+}
