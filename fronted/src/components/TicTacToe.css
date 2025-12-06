@@ -41,17 +41,34 @@
   height: 100px;
   background-color: #444;
   border: 2px solid #fff;
-  color: white;
-  font-size: 3em;
+  color: #000;
+  font-size: 2em;
   font-weight: bold;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.1s;
 }
 
-.square:hover {
-  background-color: #555;
+.square.filled {
+  background-color: #444;
+  color: white;
+}
+
+.square.animating {
+  animation: blink 0.5s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% {
+    background-color: #fff;
+    color: #000;
+  }
+  50% {
+    background-color: #000;
+    color: #fff;
+  }
 }
 
 .square:disabled {

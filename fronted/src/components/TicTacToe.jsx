@@ -7,12 +7,21 @@ const TicTacToe = () => {
   const [gameOver, setGameOver] = useState(false);
   const [winner, setWinner] = useState(null);
   const [gameStartTime, setGameStartTime] = useState(Date.now());
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     const result = calculateWinner(board);
     if (result) {
       setGameOver(true);
       setWinner(result);
+      
+      // 启动闪烁动画
+      setIsAnimating(true);
+      
+      // 3秒后停止动画
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 3000);
       
       // 保存统计数据
       const stats = JSON.parse(localStorage.getItem('tictactoeStats') || '{}');
@@ -21,9 +30,9 @@ const TicTacToe = () => {
       if (!stats.totalGames) stats.totalGames = 0;
       
       stats.totalGames++;
-      if (result === 'X') {
+      if (result === 'O') {
         stats.player1Wins++;
-      } else if (result === 'O') {
+      } else if (result === 'X') {
         stats.player2Wins++;
       }
       
@@ -41,6 +50,14 @@ const TicTacToe = () => {
       // 平局
       setGameOver(true);
       setWinner('Draw');
+      
+      // 启动闪烁动画
+      setIsAnimating(true);
+      
+      // 3秒后停止动画
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 3000);
       
       const stats = JSON.parse(localStorage.getItem('tictactoeStats') || '{}');
       if (!stats.totalGames) stats.totalGames = 0;
@@ -86,7 +103,7 @@ const TicTacToe = () => {
     if (board[index] || gameOver) return;
 
     const newBoard = [...board];
-    newBoard[index] = isXNext ? 'X' : 'O';
+    newBoard[index] = isXNext ? 'O' : 'X'; // Player 1 = O, Player 2 = X
     setBoard(newBoard);
     setIsXNext(!isXNext);
   };
@@ -96,13 +113,23 @@ const TicTacToe = () => {
     setIsXNext(true);
     setGameOver(false);
     setWinner(null);
+    setIsAnimating(false);
     setGameStartTime(Date.now());
   };
 
   const renderSquare = (index) => {
+    const isFilled = board[index] !== null;
+    let bgColor = '#444'; // 默认背景色
+    
+    // 如果是未填充的方格，根据当前玩家设置背景色
+    if (!isFilled && !gameOver) {
+      bgColor = isXNext ? 'rgb(255,220,220)' : 'rgb(220,220,255)'; // Player 1: 浅粉, Player 2: 浅蓝
+    }
+    
     return (
       <button 
-        className="square" 
+        className={`square ${isAnimating ? 'animating' : ''} ${isFilled ? 'filled' : ''}`}
+        style={!isAnimating && !isFilled ? { backgroundColor: bgColor } : {}}
         onClick={() => handleClick(index)}
       >
         {board[index]}
@@ -114,10 +141,10 @@ const TicTacToe = () => {
     if (winner === 'Draw') {
       return "It's a draw!";
     } else if (winner) {
-      const playerName = winner === 'X' ? 'Player 1' : 'Player 2';
+      const playerName = winner === 'O' ? 'Player 1' : 'Player 2';
       return `Winner: ${playerName} (${winner})`;
     } else {
-      const currentPlayer = isXNext ? 'Player 1 (X)' : 'Player 2 (O)';
+      const currentPlayer = isXNext ? 'Player 1 (O)' : 'Player 2 (X)';
       return `Current player: ${currentPlayer}`;
     }
   };
