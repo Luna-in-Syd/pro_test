@@ -9,32 +9,40 @@
   padding: 0;
 }
 
-/* Initial screen */
-.game-instructions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: calc(100vh - 140px);
+.sealthebox-game.initial {
+  padding: 0;
+}
+
+/* Initial screen overlay */
+.game-instructions-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.85);
+  padding: 40px;
+  border-radius: 10px;
+  border: 2px solid white;
   text-align: center;
   color: white;
 }
 
-.game-instructions h2 {
+.game-instructions-overlay h2 {
   font-size: 3em;
   margin-bottom: 20px;
 }
 
-.game-instructions > p {
+.game-instructions-overlay > p {
   font-size: 1.5em;
   margin-bottom: 30px;
 }
 
-.instructions-list {
+.game-instructions-overlay .instructions-list {
   text-align: left;
 }
 
-.instructions-list p {
+.game-instructions-overlay .instructions-list p {
   font-size: 1.2em;
   margin: 10px 0;
 }
@@ -138,6 +146,10 @@
     #ddd 40px
   );
   animation: belt-move 2s linear infinite;
+}
+
+.belt-pattern.static {
+  animation: none;
 }
 
 @keyframes belt-move {

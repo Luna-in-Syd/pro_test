@@ -22,13 +22,33 @@ const SealTheBox = () => {
   const MIN_BOX_SPACING = 100;
   const BELT_POSITIONS = [150, 350, 550]; // Y positions for three belts
 
+  // 在组件加载时初始化盒子（但不移动）
   useEffect(() => {
     const stored = localStorage.getItem('sealStats');
     if (stored) {
       const stats = JSON.parse(stored);
       setBestScore(stats.bestScore || 0);
     }
+    
+    // 初始化盒子位置
+    initializeBoxes();
   }, []);
+  
+  const initializeBoxes = () => {
+    const initialBoxes = [];
+    for (let belt = 0; belt < 3; belt++) {
+      const numBoxes = Math.floor(Math.random() * 3) + 2; // 2-4 boxes per belt
+      for (let i = 0; i < numBoxes; i++) {
+        initialBoxes.push({
+          id: `initial-${belt}-${i}`,
+          belt,
+          x: window.innerWidth * 0.3 + i * (BOX_SIZE + MIN_BOX_SPACING + Math.random() * 200),
+          sealed: false,
+        });
+      }
+    }
+    setBoxes(initialBoxes);
+  };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -60,21 +80,6 @@ const SealTheBox = () => {
     setMissedCount(0);
     gameStartTimeRef.current = Date.now();
     lastUpdateTimeRef.current = Date.now();
-    
-    // Initialize with some boxes on each belt
-    const initialBoxes = [];
-    for (let belt = 0; belt < 3; belt++) {
-      const numBoxes = Math.floor(Math.random() * 3) + 2; // 2-4 boxes per belt
-      for (let i = 0; i < numBoxes; i++) {
-        initialBoxes.push({
-          id: `initial-${belt}-${i}`,
-          belt,
-          x: window.innerWidth + i * (BOX_SIZE + MIN_BOX_SPACING + Math.random() * 200),
-          sealed: false,
-        });
-      }
-    }
-    setBoxes(initialBoxes);
     nextBoxTimeRef.current = [0, 0, 0];
   };
 
@@ -104,6 +109,17 @@ const SealTheBox = () => {
     }
 
     // Cancel animation frame
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+  };
+
+  const resetGame = () => {
+    setGameState('initial');
+    setCurrentBelt(1);
+    setSealedCount(0);
+    setMissedCount(0);
+    initializeBoxes();
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
     }
@@ -201,8 +217,8 @@ const SealTheBox = () => {
 
   if (gameState === 'initial') {
     return (
-      <div className="sealthebox-game">
-        <div className="game-instructions">
+      <div className="sealthebox-game initial">
+        <div className="game-instructions-overlay">
           <h2>Seal The Box</h2>
           <p>Press any key to start!</p>
           <div className="instructions-list">
@@ -210,6 +226,48 @@ const SealTheBox = () => {
             <p>• Touch boxes to seal them</p>
             <p>• Don't let 3 unsealed boxes escape!</p>
           </div>
+        </div>
+        
+        {/* 显示传送带和盒子但不移动 */}
+        <div className="belts-container">
+          {[0, 1, 2].map(beltIndex => (
+            <div key={beltIndex} className="belt-wrapper" style={{ top: `${BELT_POSITIONS[beltIndex]}px` }}>
+              <div className="belt">
+                {/* 初始状态下不显示滚动动画 */}
+                <div className="belt-pattern static"></div>
+              </div>
+              
+              {/* Avatar on middle belt */}
+              {beltIndex === 1 && (
+                <div 
+                  className="avatar" 
+                  style={{ 
+                    left: `${avatarPosition}px`,
+                  }}
+                >
+                  👤
+                </div>
+              )}
+              
+              {/* Boxes on this belt (静止不动) */}
+              {boxes
+                .filter(box => box.belt === beltIndex)
+                .map(box => (
+                  <div
+                    key={box.id}
+                    className="box"
+                    style={{
+                      left: `${box.x}px`,
+                    }}
+                  >
+                    <img 
+                      src={unsealedBoxImg} 
+                      alt="Unsealed box"
+                    />
+                  </div>
+                ))}
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -224,7 +282,7 @@ const SealTheBox = () => {
             <p className="score">Boxes Sealed: {sealedCount}</p>
             <p className="best">Best Score: {bestScore}</p>
           </div>
-          <button className="play-again-btn" onClick={startGame}>
+          <button className="play-again-btn" onClick={resetGame}>
             Play Again
           </button>
         </div>
